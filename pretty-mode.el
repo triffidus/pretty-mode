@@ -527,7 +527,7 @@ Should be a list of the form ((MODE ((REGEXP . GLYPH) ...)) ...)"
                 (:fun "fun" tuareg)
                 (:fun "fun" fsharp)
                 (:function "function" javascript ess)
-                (:lambda "lambda" scheme lisp emacs-lisp ruby)
+                (:lambda "lambda" python scheme lisp emacs-lisp ruby)
                 (:\\ "\\" haskell))
 
        ;;; 039B Λ GREEK CAPITAL LETTER LAMDA
@@ -815,7 +815,7 @@ Should be a list of the form ((MODE ((REGEXP . GLYPH) ...)) ...)"
 
        ;; 2192 → RIGHTWARDS ARROW
        (?\u2192 :rightarrow (:arrows)
-                (:-> "->" ,@mley ess c c++ perl ,@lispy coffee groovy))
+                (:-> "->" ,@mley ess c c++ python perl ,@lispy coffee groovy))
 
        ;; 21A0 ↠ RIGHTWARDS TWO HEADED ARROW
        (?\u21A0 :twoheadrightarrow (:arrows :arrows-twoheaded)
