@@ -135,13 +135,14 @@ implied mode from MODE and return it."
     ;; turn on :sets-operations-nary manually
     :arrows :arrows-twoheaded
     ;; turn on :arrows-tails and :arrows-tails-double manually
-    :arithmetic :arithmetic-double
+    :arithmetic :arithmetic-double :arithmetic-nary
     ;; turn on :arithmetic-triple and :arithmetic-nary manually
     :punctuation
     :subscripts :superscripts
     ;; turn on :sub-and-superscripts manually
     ;; turn on :parentheses manually
     ;; turn on :types manually
+    :quantifiers
     )
   "A list of groups that should be activated by default.")
 
@@ -151,7 +152,7 @@ implied mode from MODE and return it."
     python-mode sml-mode jess-mode clips-mode clojure-mode
     lisp-mode emacs-lisp-mode scheme-mode sh-mode
     perl-mode c++-mode c-mode haskell-mode
-    javascript-mode coffee-mode groovy-mode fsharp-mode)
+    javascript-mode coffee-mode groovy-mode fsharp-mode go-mode)
   "A list of all supported modes.")
 
 (defun ensure-modes (modes)
@@ -334,7 +335,7 @@ expected by `pretty-patterns'"
 Should be a list of the form ((MODE ((REGEXP . GLYPH) ...)) ...)"
   (let* ((lispy '(scheme emacs-lisp lisp clojure jess clips))
          (mley '(haskell tuareg sml fsharp))
-         (c-like '(c c++ perl sh python java ess ruby javascript coffee groovy))
+         (c-like '(c c++ perl sh python java ess ruby javascript coffee groovy go))
          (all (append lispy mley c-like (list 'octave))))
     (pretty-compile-patterns
      `(
@@ -402,14 +403,14 @@ Should be a list of the form ((MODE ((REGEXP . GLYPH) ...)) ...)"
 
        ;;; 00AC ¬ NOT SIGN
        (?\u00AC :neg (:logic)
-                (:! "!" c c++ perl sh ruby javascript)
+                (:! "!" c c++ perl sh ruby javascript go)
                 (:not "not" ,@lispy haskell sml fsharp))
 
        ;;; 2227 ∧ LOGICAL AND
        (?\u2227 :wedge (:logic)
                 (:and "and" ,@lispy python ruby coffee)
                 (:andalso "andalso" sml)
-                (:&& "&&" c c++ perl haskell ruby javascript coffee fsharp))
+                (:&& "&&" c c++ perl haskell ruby javascript coffee fsharp go))
 
        ;;; 22AB ⊫ DOUBLE VERTICAL BAR DOUBLE RIGHT TURNSTILE
        (?\u22AB :models (:logic :logic-extended)
@@ -419,7 +420,7 @@ Should be a list of the form ((MODE ((REGEXP . GLYPH) ...)) ...)"
        (?\u2228 :vee (:logic)
                 (:or "or" ,@lispy python ruby coffee)
                 (:orelse "orelse" sml)
-                (:|| "||" c c++ perl haskell ruby javascript coffee fsharp))
+                (:|| "||" c c++ perl haskell ruby javascript coffee fsharp go))
 
        ;;; 22C0 ⋀ N-ARY LOGICAL AND
        (?\u22C0 :bigwedge (:logic :logic-nary)
@@ -434,7 +435,8 @@ Should be a list of the form ((MODE ((REGEXP . GLYPH) ...)) ...)"
        ;;; 2208 ∈ ELEMENT OF
        (?\u2208 :in (:sets :sets-relations)
                 (:elem "`elem`" haskell)
-                (:in "in" python coffee javascript))
+                (:in "in" python coffee javascript)
+                (:in_range "= range" go))
 
        ;;; 2209 ∉ NOT AN ELEMENT OF
        (?\u2209 :notin (:sets :sets-relations)
@@ -803,7 +805,7 @@ Should be a list of the form ((MODE ((REGEXP . GLYPH) ...)) ...)"
 
        ;; 2190 ← LEFTWARDS ARROW
        (?\u2190 :leftarrow (:arrows)
-                (:<- "<-" ,@mley ess ,@lispy))
+                (:<- "<-" ,@mley ess ,@lispy go))
 
        ;; 219E ↞ LEFTWARDS TWO HEADED ARROW
        (?\u219E :twoheadleftarrow (:arrows :arrows-twoheaded)
@@ -815,7 +817,7 @@ Should be a list of the form ((MODE ((REGEXP . GLYPH) ...)) ...)"
 
        ;; 2192 → RIGHTWARDS ARROW
        (?\u2192 :rightarrow (:arrows)
-                (:-> "->" ,@mley ess c c++ python perl ,@lispy coffee groovy))
+                (:-> "->" ,@mley ess c c++ perl ,@lispy coffee groovy python go))
 
        ;; 21A0 ↠ RIGHTWARDS TWO HEADED ARROW
        (?\u21A0 :twoheadrightarrow (:arrows :arrows-twoheaded)
@@ -849,17 +851,19 @@ Should be a list of the form ((MODE ((REGEXP . GLYPH) ...)) ...)"
 
        ;; 2200 ∀ FOR ALL
        (?\u2200 :forall (:quantifiers)
-                (:forall "forall" haskell))
+                (:forall "forall" haskell)
+                (:all "all" python))
 
        ;; 2203 ∃ THERE EXISTS
        (?\u2203 :exists (:quantifiers)
-                (:exists "exists" haskell))
+                (:exists "exists" haskell)
+                (:any "any" python))
 
        ;;; Nil
 
        ;; 2205 ∅ EMPTY SET
        (?\u2205 :emptyset (:nil)
-                (:nil "nil" emacs-lisp ruby clojure)
+                (:nil "nil" emacs-lisp ruby clojure go)
                 (:null "null" scheme java coffee javascript)
                 (:\'\(\) "'()" scheme)
                 (:empty "empty" scheme)
